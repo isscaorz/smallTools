@@ -1,14 +1,15 @@
 let allFun = {
 	filterFolder: ['node_modules', '.git'], // 需要过滤的文件夹
 	filterFile: ['.gitkeep'], // 需要过滤的文件,注意要加类型后缀
-	filterType: ['.png', '.jpg', '.mp3', '.mp4'], // 需要过滤的文件类型,如果是没有后缀的纯文件，类型值为'.'
+	filterType: ['.png', '.jpg', '.mp3', '.mp4', '.rar', '.zip', '.7z'], // 需要过滤的文件类型,如果是没有后缀的纯文件，类型值为'.'
 	onlyTypes: [], // 如果此数组有值，则只检查此数组内规定的文件类型
 	lineSum: 0, //总计代码行数
-	fileSum: -1, //总计文件数
+	fileSum: 0, //总计文件数
 	timer: null,
 	init: function() {
 		let that = this;
 		document.querySelector('#btn').addEventListener('change', e => {
+			that.lineSum = 0;
 			that.fileSum = e.target.files.length;
 			that.setTimer();
 			for (let entry of e.target.files) {
@@ -25,7 +26,7 @@ let allFun = {
 		that.timer = setInterval(() => {
 			if (that.fileSum == 0) {
 				clearInterval(that.timer);
-				let output = '代码行数总计：' + allFun.lineSum;
+				let output = '代码行数总计：' + that.lineSum;
 				console.log(output);
 				document.getElementById('output').innerText = output;
 			}
@@ -35,7 +36,7 @@ let allFun = {
 		let that = this;
 		let path = file.webkitRelativePath;
 		for (let i = 0, len = that.filterFolder.length; i < len; i++) {
-			let reg = new RegExp(that.filterFolder[i] + '/');
+			let reg = new RegExp('/' + that.filterFolder[i] + '/');
 			if (reg.test(path)) {
 				that.fileSum--;
 				return;
