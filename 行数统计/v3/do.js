@@ -1,7 +1,7 @@
 let allFun = {
 	filterFolder: ['node_modules', '.git'], // 需要过滤的文件夹
 	filterFile: ['.gitkeep'], // 需要过滤的文件,注意要加类型后缀
-	filterType: ['.png', '.jpg'], // 需要过滤的文件类型
+	filterType: ['.png', '.jpg', '.mp3', '.mp4'], // 需要过滤的文件类型,如果是没有后缀的纯文件，类型值为'.'
 	onlyTypes: [], // 如果此数组有值，则只检查此数组内规定的文件类型
 	lineSum: 0, //总计代码行数
 	fileSum: -1, //总计文件数
@@ -41,20 +41,31 @@ let allFun = {
 				return;
 			}
 		}
-        let name = file.name;        
+		let name = file.name;
 		if (that.filterFile.indexOf(name) != -1) {
-            that.fileSum--;
-		    return;
+			that.fileSum--;
+			return;
 		}
-		// let ext = path.extname(file);
-		// if (that.filterType.indexOf(ext) != -1) {
-        //     that.fileSum--;
-		//     return;
-		// }
-		// if (that.onlyTypes.length > 0 && that.onlyTypes.indexOf(ext) == -1) {
-        //     that.fileSum--;
-		//     return;
-		// }
+		let extper = '';
+		let ext = '';
+		let nameArr = name.split('.');
+		let nameArrLen = nameArr.length;
+		for (let i = 0, len = nameArrLen - 1; i < len; i++) {
+			extper += nameArr[i];
+		}
+		if (extper == '') {
+			ext = '.';
+		} else {
+			ext = '.' + nameArr[nameArrLen - 1];
+		}
+		if (that.filterType.indexOf(ext) != -1) {
+			that.fileSum--;
+			return;
+		}
+		if (that.onlyTypes.length > 0 && that.onlyTypes.indexOf(ext) == -1) {
+			that.fileSum--;
+			return;
+		}
 		that.doCount(file);
 	},
 	doCount: function(file) {
